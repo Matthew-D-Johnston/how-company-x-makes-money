@@ -22,12 +22,8 @@ class DatabasePersistence
     query(sql, name, ticker)
   end
 
-  def all_company_names
-    sql = "SELECT name FROM companies"
+  def all_company_names_and_tickers
+    sql = "SELECT name, ticker FROM companies"
     result = query(sql)
-
-    result.map do |tuple|
-      tuple["name"]
-    end
   end
 end
