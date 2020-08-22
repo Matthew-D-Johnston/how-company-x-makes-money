@@ -1,10 +1,38 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title>How Company X Makes Money</title>
     <meta charset="UTF-8">
   </head>
   <body>
-      <%= session[:ticker] %>
+      <h2><%= session[:ticker] %></h2>
+      <h2><%= session[:company_id] %></h2>
+      <form method="post" action="/financial_report">
+        <label for="quarter"><strong>Quarter (1 - 4 for corresponding quarter or 0 for annual):</strong>
+          <input name="quarter" />
+        </label>
+        <br>
+        <label for="year"><strong>Year:</strong>
+          <input name="year" />
+        </label>
+        <br>
+        <label for="period_end"><strong>Period end date (month day, year; e.g. January 8, 1999):</strong>
+          <input name="period_end" />
+        </label>
+        <br>
+        <label for="source"><strong>Source (e.g. 10-Q, 10-K):</strong>
+          <input name="source" />
+        </label>
+        <br>
+        <label for="source_url"><strong>Source URL:</strong>
+          <input name="source_url" />
+        </label>
+        <br>
+        <label for="number_of_segments"><strong>Number of Segments:</strong>
+          <input name="number_of_segments" />
+        </label>
+        <br>
+        <button type="submit">Submit</button>
+      </form>
   </body>
 </html>

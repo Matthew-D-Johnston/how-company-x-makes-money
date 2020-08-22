@@ -8,8 +8,11 @@ CREATE TABLE financial_data (
   id serial PRIMARY KEY,
   company_id integer NOT NULL REFERENCES companies(id),
   report_id integer NOT NULL REFERENCES financial_report(id),
+  source_page text NOT NULL,
+  currency text NOT NULL,
   segment text NOT NULL,
   metric text NOT NULL,
+  unit text NOT NULL CHECK(unit IN(b, m, t)),
   data_current_period integer NOT NULL,
   data_year_ago_period integer NOT NULL,
 );

@@ -1,14 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title>How Company X Makes Money</title>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8"/>
   </head>
   <body>
+    <section class="company_list">
       <% @company_list.each do |tuple| %>
         <form class="inline" method="get" action="/company_data_input">
-          <br><button name="<%= tuple["ticker"].downcase %>" type="submit"><%= tuple["name"] %></button>
+          <br><button name="<%= tuple["ticker"] %>" type="submit"><%= tuple["name"] %></button>
         </form>
       <% end %>
+    </section>
+    <section class="add_company">
+      <form class="inline" method="get" action="/add_company">
+        <br><button type="submit">Add Company</button>
+      </form>
+    </section>
   </body>
 </html>
