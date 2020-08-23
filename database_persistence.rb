@@ -59,7 +59,7 @@ class DatabasePersistence
   def find_company_segments(company_id, report_id)
     sql = <<~SQL
       SELECT DISTINCT segment FROM financial_data
-       WHERE company_id = $1 AND report_id = $2 AND segment != 'total'
+       WHERE company_id = $1 AND report_id = $2 AND segment != 'Total'
     SQL
 
     result = query(sql, company_id, report_id)
@@ -71,7 +71,7 @@ class DatabasePersistence
   def find_company_metrics(company_id, report_id)
     sql = <<~SQL
       SELECT DISTINCT metric FROM financial_data
-       WHERE company_id = $1 AND report_id = $2 AND segment != 'total'
+       WHERE company_id = $1 AND report_id = $2 AND segment != 'Total'
     SQL
 
     result = query(sql, company_id, report_id)
@@ -99,7 +99,7 @@ class DatabasePersistence
        WHERE metric = $1
          AND company_id = $2
          AND report_id = $3
-         AND segment != 'total'
+         AND segment != 'Total'
          AND data_current_period >= 0
     SQL
 

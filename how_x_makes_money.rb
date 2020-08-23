@@ -139,8 +139,8 @@ helpers do
   end
 
   def segment_share_totals(break_down_hash, segment, metric, company_id, report_id)
-    return "100.0%" if segment == 'total'
-    
+    return "100.0%" if segment == 'Total'
+
     individual_metric = break_down_hash[segment][metric].to_f
     total_for_metric = @storage.find_segments_metric_total(metric, company_id, report_id).to_f
 
