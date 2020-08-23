@@ -5,8 +5,7 @@
     <meta charset="UTF-8">
   </head>
   <body>
-      <h2><%= session[:ticker] %></h2>
-      <h2><%= session[:company_id] %></h2>
+      <h1><%= session[:ticker] %></h1>
       <form method="post" action="/financial_report">
         <label for="quarter"><strong>Quarter (1 - 4 for corresponding quarter or 0 for annual):</strong>
           <input name="quarter" />

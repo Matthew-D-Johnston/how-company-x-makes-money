@@ -17,11 +17,6 @@ class DatabasePersistence
     @db.exec_params(statement, params)
   end
 
-  def add_company(name, ticker)
-    sql = "INSERT INTO companies (name, ticker) VALUES ($1, $2)"
-    query(sql, name, ticker)
-  end
-
   def find_company_id_from_ticker(ticker)
     sql = "SELECT id FROM companies WHERE ticker = $1"
 
@@ -29,17 +24,61 @@ class DatabasePersistence
     result["id"]
   end
 
-  # def add_financial_report(company_id, quarter, year, period_end, source, source_url)
-  #   sql = <<~SQL
-  #     INSERT INTO financial_report (company_id, quarter, year, period_end_date, source, source_url)
-  #     VALUES ($1, $2, $3, $4, $5, $6)
-  #   SQL
+  def find_company_nickname_from_ticker(ticker)
+    sql = "SELECT nickname FROM companies WHERE ticker = $1"
 
+    result = query(sql, ticker).first
+    result["nickname"]
+  end
 
-  # end
+  def find_current_report_id(company_id, quarter, year, source)
+    sql = <<~SQL
+      SELECT id FROM financial_report
+       WHERE (company_id, quarter, year, source) = ($1, $2, $3, $4)
+    SQL
 
-  def all_company_names_and_tickers
-    sql = "SELECT name, ticker FROM companies"
+    result = query(sql, company_id, quarter, year, source).first
+    result["id"]
+  end
+
+  def find_raw_data(ticker, nickname, quarter, year, source)
+    sql = <<~SQL
+      SELECT c.*, fr.*, fd.* FROM companies AS c
+       INNER JOIN financial_report AS fr ON c.id = fr.company_id
+       INNER JOIN financial_data AS fd ON fr.id = fd.report_id
+       WHERE (ticker, nickname, quarter, year, source) = ($1, $2, $3, $4, $5) 
+    SQL
+
+    query(sql, ticker, nickname, quarter, year, source)
+  end
+
+  def add_company(name, nickname, ticker)
+    sql = "INSERT INTO companies (name, nickname, ticker) VALUES ($1, $2, $3)"
+    query(sql, name, nickname, ticker)
+  end
+
+  def add_financial_report(company_id, quarter, year, period_end, source, source_url, segments)
+    sql = <<~SQL
+      INSERT INTO financial_report
+        (company_id, quarter, year, period_end_date, source, source_url, number_of_segments)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
+    SQL
+
+    query(sql, company_id, quarter, year, period_end, source, source_url, segments)
+  end
+
+  def add_financial_data(company_id, report_id, source_page, currency, segment, metric, unit, current_data, year_ago_data)
+    sql = <<~SQL
+      INSERT INTO financial_data
+        (company_id, report_id, source_page, currency, segment, metric, unit, data_current_period, data_year_ago_period)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+    SQL
+
+    query(sql, company_id, report_id, source_page, currency, segment, metric, unit, current_data, year_ago_data)
+  end
+
+  def all_company_names_nicknames_and_tickers
+    sql = "SELECT name, nickname, ticker FROM companies"
     result = query(sql)
   end
 end

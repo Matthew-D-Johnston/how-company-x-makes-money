@@ -8,8 +8,14 @@
     <section class="company_list">
       <% @company_list.each do |tuple| %>
         <form class="inline" method="get" action="/company_data_input">
-          <br><button name="<%= tuple["ticker"] %>" type="submit"><%= tuple["name"] %></button>
+          <strong><%= tuple["nickname"] %></strong>
+          <br><button name="<%= tuple["ticker"] %>" type="submit">Input Data</button>
         </form>
+         or 
+        <form class="inline" method="get" action="/retrieve_data">
+          <button name="<%= tuple["ticker"] %>" type="submit">Retrieve Data</button>
+        </form>
+        <br>
       <% end %>
     </section>
     <section class="add_company">

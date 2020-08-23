@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>How Company X Makes Money</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <h1>Retrieve Data for <%= session[:nickname] %></h1>
+    <form method="post" action="/retrieve_data">
+      <label for="quarter"><strong>Quarter (0 - 4, where 0 = annual):</strong>
+        <input name="quarter" />
+      </label>
+      <br>
+      <label for="year"><strong>Year:</strong>
+        <input name="year" />
+      </label>
+      <br>
+      <label for="source"><strong>Source (e.g. 10-Q, 10-K, etc.):</strong>
+        <input name="source" />
+      </label>
+      <br>
+      <button type="submit">Submit</button>
+    </form>
+  </body>
+</html>
