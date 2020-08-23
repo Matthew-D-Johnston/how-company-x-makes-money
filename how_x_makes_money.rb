@@ -97,6 +97,7 @@ post "/financial_report" do
 
   session[:company_id] = company_id
   session[:segments] = segments.to_i
+  session[:earnings_info] = params[:earnings_info]
 
   @storage.add_financial_report(company_id, quarter, year, period_end, source, source_url, segments)
 
@@ -146,16 +147,17 @@ post "/financial_data" do
 
     @storage.add_financial_data(company_id, report_id, rev_source_page, rev_currency, rev_segment, rev_metric, rev_unit, rev_current_data, rev_year_ago_data)
 
+    if session[:earnings_info] == 'y'
+      earn_source_page = params["earnings_source_page_#{segment_number}".to_sym]
+      earn_currency = params["earnings_currency_#{segment_number}".to_sym]
+      earn_segment = params["segment_#{segment_number}_name".to_sym]
+      earn_metric = params["earnings_metric_#{segment_number}".to_sym]
+      earn_unit = params["earnings_unit_#{segment_number}".to_sym]
+      earn_current_data = params["current_total_earnings_#{segment_number}".to_sym]
+      earn_year_ago_data = params["past_total_earnings_#{segment_number}".to_sym]
 
-    earn_source_page = params["earnings_source_page_#{segment_number}".to_sym]
-    earn_currency = params["earnings_currency_#{segment_number}".to_sym]
-    earn_segment = params["segment_#{segment_number}_name".to_sym]
-    earn_metric = params["earnings_metric_#{segment_number}".to_sym]
-    earn_unit = params["earnings_unit_#{segment_number}".to_sym]
-    earn_current_data = params["current_total_earnings_#{segment_number}".to_sym]
-    earn_year_ago_data = params["past_total_earnings_#{segment_number}".to_sym]
-
-    @storage.add_financial_data(company_id, report_id, earn_source_page, earn_currency, earn_segment, earn_metric, earn_unit, earn_current_data, earn_year_ago_data)
+      @storage.add_financial_data(company_id, report_id, earn_source_page, earn_currency, earn_segment, earn_metric, earn_unit, earn_current_data, earn_year_ago_data)
+    end
   end
 
   redirect "/company_list"

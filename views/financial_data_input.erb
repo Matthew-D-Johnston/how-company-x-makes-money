@@ -87,30 +87,32 @@
           <input name="revenue_source_page_<%= segment_number %>" />
         </label>
         <br>
-        <h3>Earnings Metric for Segment <%= segment_number %></h3>
-        <label for="earnings_metric_<%= segment_number %>">Earnings Metric (e.g. net earnings, net income, etc.):
-          <input name="earnings_metric_<%= segment_number %>" />
-        </label>
-        <br>
-        <label for="current_total_earnings_<%= segment_number %>">Current Data:
-          <input name="current_total_earnings_<%= segment_number %>" />
-        </label>
-        <br>
-        <label for="past_total_earnings_<%= segment_number %>">Year-Ago Data:
-          <input name="past_total_earnings_<%= segment_number %>" />
-        </label>
-        <br>
-        <label for="earnings_currency_<%= segment_number %>">Currency (e.g. $, €, etc.):
-          <input name="earnings_currency_<%= segment_number %>" />
-        </label>
-        <br>
-        <label for="earnings_unit_<%= segment_number %>">Unit (b, m, or t):
-          <input name="earnings_unit_<%= segment_number %>" />
-        </label>
-        <br>
-        <label for="earnings_source_page_<%= segment_number %>">Source Page:
-          <input name="earnings_source_page_<%= segment_number %>" />
-        </label> 
+        <% if session[:earnings_info] == 'y' %>
+          <h3>Earnings Metric for Segment <%= segment_number %></h3>
+          <label for="earnings_metric_<%= segment_number %>">Earnings Metric (e.g. net earnings, net income, etc.):
+            <input name="earnings_metric_<%= segment_number %>" />
+          </label>
+          <br>
+          <label for="current_total_earnings_<%= segment_number %>">Current Data:
+            <input name="current_total_earnings_<%= segment_number %>" />
+          </label>
+          <br>
+          <label for="past_total_earnings_<%= segment_number %>">Year-Ago Data:
+            <input name="past_total_earnings_<%= segment_number %>" />
+          </label>
+          <br>
+          <label for="earnings_currency_<%= segment_number %>">Currency (e.g. $, €, etc.):
+            <input name="earnings_currency_<%= segment_number %>" />
+          </label>
+          <br>
+          <label for="earnings_unit_<%= segment_number %>">Unit (b, m, or t):
+            <input name="earnings_unit_<%= segment_number %>" />
+          </label>
+          <br>
+          <label for="earnings_source_page_<%= segment_number %>">Source Page:
+            <input name="earnings_source_page_<%= segment_number %>" />
+          </label>
+        <% end %>
       <% end %>
       <br>
       <button type="submit">Submit</button>
