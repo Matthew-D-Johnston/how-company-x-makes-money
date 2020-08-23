@@ -3,24 +3,54 @@
   <head>
     <title>How Company X Makes Money</title>
     <meta charset="utf-8" />
+    <style>
+      .raw {
+        background-color: #CEE8FF;
+      }
+
+      .formatted {
+        background-color: #FFFAE2;
+      }
+    </style>
   </head>
   <body>
     <h1>Financial Data Output for <%= session[:nickname] %></h1>
+    <% if session[:retrieve_data_quarter] == 0 %>
+      <h2><%= session[:retrieve_data_source] %> for <%= session[:retrieve_data_year] %>
+    <% else %>
+      <h2><%= session[:retrieve_data_source] %> for Q<%= session[:retrieve_data_quarter] %> <%= session[:retrieve_data_year] %></h2>
+    <% end %>
 
-    <section>
+    <section class="raw">
       <h2>Raw Data</h2>
       <% @raw_data.each do |tuple| %>
-        <%= tuple["segment"] %>
-        <br>
+        <h3><%= tuple["segment"] %> <%= tuple["metric"] %></h3>
+        <p>
+          Current Period: <%= format_financial_data(tuple["data_current_period"], tuple["currency"], tuple["unit"]) %>
+          <br>
+          Year-Ago Period: <%= format_financial_data(tuple["data_year_ago_period"], tuple["currency"], tuple["unit"]) %>
+          <br>
+          Source Page: <%= tuple["source_page"] %>
+        </p>
       <% end %>
     </section>
 
-    <section>
+    <section class="formatted">
       <h2>Formatted Data</h2>
-    </section>
-
-    <section>
-      <h2>Citations</h2>
+      <% @raw_data.each do |tuple| %>
+        <h3><%= tuple["segment"] %> <%= tuple["metric"] %></h3>
+        <p>
+          Current Period: <%= round_to_one_decimal(full_number_from_units(tuple["data_current_period"], tuple["unit"]), tuple["currency"]) %>
+          <br>
+          Year-Ago Period: <%= round_to_one_decimal(full_number_from_units(tuple["data_year_ago_period"], tuple["unit"]), tuple["currency"]) %>
+          <br>
+          YOY Growth Rate: <%= yoy_growth_rate(tuple["data_current_period"], tuple["data_year_ago_period"]) %>
+          <br>
+          Share of Total: <%= segment_share_totals(@segment_breakdown, tuple["segment"], tuple["metric"], tuple["company_id"], tuple["report_id"]) %>
+          <br>
+          Citation: <%= tuple["name"] %>. "<a href="<%= tuple["source_url"] %>"><%= citation_source(session[:retrieve_data_source], session[:retrieve_data_quarter], tuple["period_end_date"])%></a>," page <%= tuple["source_page"] %>. Accessed <%= current_date %>.
+        </p>
+      <% end %>
     </section>
   </body>
 </html>

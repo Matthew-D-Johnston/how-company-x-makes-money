@@ -1,6 +1,8 @@
 require "sinatra"
 require "sinatra/content_for"
 require "tilt/erubis"
+require "date"
+require "pry"
 
 require_relative "database_persistence"
 
@@ -21,6 +23,137 @@ end
 
 after do
   @storage.disconnect
+end
+
+helpers do
+  def add_commas_to_financial_data(figure)
+    counter = -4
+    iterations = figure.length / 3
+    iterations -= 1 if figure.length % 3 == 0
+    new_figure = figure
+
+    iterations.times do
+      new_figure.insert(counter, ',')
+      counter -= 4
+    end
+
+    new_figure
+  end
+
+  def dis_abbreviate(unit)
+    case unit
+    when 't' then 'thousand'
+    when 'm' then 'million'
+    when 'b' then 'million'
+    end
+  end
+
+  def full_number_from_units(figure, unit)
+    new_figure = figure.to_i
+
+    case unit
+    when 't'
+      new_figure *= 1000
+    when 'm'
+      new_figure *= 1000000
+    when 'b'
+      new_figure *= 1000000000
+    end
+
+    new_figure
+  end
+
+  def round_to_one_decimal(figure, currency)
+    number_of_digits = figure.abs.digits.count
+    suffix = ''
+    rounded_figure = 0
+
+    case number_of_digits
+    when (1..3) 
+      suffix = ''
+      rounded_figure = figure
+    when (4..6) 
+      suffix = 'thousand'
+      rounded_figure = (figure.to_f / 1000).round(1)
+    when (7..9) 
+      suffix = 'million'
+      rounded_figure = (figure.to_f / 1_000_000).round(1)
+    when (10..12) 
+      suffix = 'billion'
+      rounded_figure = (figure.to_f / 1_000_000_000).round(1)
+    end
+
+    if rounded_figure < 0
+      rounded_figure = rounded_figure.abs
+      "-#{currency}#{rounded_figure} #{suffix}"
+    else
+      "#{currency}#{rounded_figure} #{suffix}"
+    end
+  end
+
+  def format_financial_data(data, currency, unit)
+    if data[0] == '-'
+      absolute_data = data.gsub('-', '')
+      new_data = add_commas_to_financial_data(absolute_data)
+      units = dis_abbreviate(unit)
+
+      "-#{currency}#{new_data} #{units}"
+    else
+      new_data = add_commas_to_financial_data(data)
+      units = dis_abbreviate(unit)
+
+      "#{currency}#{new_data} #{units}"
+    end
+  end
+
+  def yoy_growth_rate(current_figure, year_ago_figure)
+    current = current_figure.to_i
+    year_ago = year_ago_figure.to_i
+
+    if current < 0 || year_ago < 0
+      "N/A"
+    else
+      yoy = (((current.to_f / year_ago.to_f) - 1) * 100).round(1)
+      "#{yoy}%"
+    end
+  end
+
+  def current_date
+    date = Time.now
+    year = date.year
+    month = Date::MONTHNAMES[date.month][0..2]
+    day = date.day
+
+    "#{month}. #{day}, #{year}"
+  end
+
+  def citation_source(source, quarter, period_end)
+    year, month, day = period_end.split('-')
+    month = Date::MONTHNAMES[month.to_i]
+
+    if quarter == 0
+      "Form #{source} for the fiscal year ended #{month} #{day}, #{year},"
+    else
+      "Form #{source} for the quarterly period ended #{month} #{day}, #{year}"
+    end
+  end
+
+  def segment_share_totals(break_down_hash, segment, metric, company_id, report_id)
+    return "100.0%" if segment == 'total'
+    
+    individual_metric = break_down_hash[segment][metric].to_f
+    total_for_metric = @storage.find_segments_metric_total(metric, company_id, report_id).to_f
+
+    "#{((individual_metric / total_for_metric) * 100).round(2)}%"
+  end
+end
+
+def segment_breakdown_hash(segments, metrics, company_id, report_id)
+  segments.each_with_object({}) do |segment, segment_hash|
+    segment_hash[segment] = metrics.each_with_object({}) do |metric, metric_hash|
+                              metric_hash[metric] = @storage.find_individual_segment_metric_data(metric, segment, company_id, report_id)
+                            end
+  end
 end
 
 get "/" do
@@ -65,17 +198,14 @@ get "/financial_data_output" do
   source = session[:retrieve_data_source]
 
   @raw_data = @storage.find_raw_data(ticker, nickname, quarter, year, source)
-  # Get Raw Data:
-  # - Total Revenue for current and year-ago periods
-  # - Total Earnings for current and year-ago periods
-  # - Segment Revenue/Earnings for current and year-ago periods
 
-  # Get Formatted Data:
-  # - Rounded data to proper decimal place with appropriate units
-  # - YOY growth rate rounded to proper decimal place
-  # - segment shares of total rounded to proper decimal place
+  company_id = @storage.find_company_id_from_ticker(ticker)
+  report_id = @storage.find_current_report_id(company_id, quarter, year, source)
 
-  # All appropriate citations with link to url source
+  segments_arr = @storage.find_company_segments(company_id, report_id)
+  metrics_arr = @storage.find_company_metrics(company_id, report_id)
+
+  @segment_breakdown = segment_breakdown_hash(segments_arr, metrics_arr, company_id, report_id)
 
   erb :financial_data_output
 end
@@ -113,7 +243,7 @@ post "/financial_data" do
   # Total Revenue
   rev_source_page = params[:revenue_source_page]
   rev_currency = params[:revenue_currency]
-  rev_segment = 'total'
+  rev_segment = 'Total'
   rev_metric = params[:revenue_metric]
   rev_unit = params[:revenue_unit]
   rev_current_data = params[:current_total_revenue]
@@ -124,7 +254,7 @@ post "/financial_data" do
   # Total Earnings
   earn_source_page = params[:earnings_source_page]
   earn_currency = params[:earnings_currency]
-  earn_segment = 'total'
+  earn_segment = 'Total'
   earn_metric = params[:earnings_metric]
   earn_unit = params[:earnings_unit]
   earn_current_data = params[:current_total_earnings]
