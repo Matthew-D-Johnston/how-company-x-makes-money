@@ -3,115 +3,135 @@
   <head>
     <title>How Company X Makes Money</title>
     <meta charset="utf-8" />
+    <style>
+      .metric-totals {
+        background-color: #DDFEDD;
+      }
+
+      .segment-revenue {
+        background-color: #E7DEFC;
+      }
+
+      .segment-earnings {
+        background-color: #FDDED5;
+      }
+    </style>
   </head>
   <body>
     <h1><%= session[:ticker] %></h1>
     <form method="post" action="/financial_data">
-      <h3>Revenue Total</h3>
-      <label for="revenue_metric">Revenue Metric (e.g. revenue, sales, etc.):
-        <input name="revenue_metric" />
-      </label>
-      <br>
-      <label for="current_total_revenue">Current Data:
-        <input name="current_total_revenue" />
-      </label>
-      <br>
-      <label for="past_total_revenue">Year-Ago Data:
-        <input name="past_total_revenue" />
-      </label>
-      <br>
-      <label for="revenue_currency">Currency (e.g. $, €, etc.):
-        <input name="revenue_currency" />
-      </label>
-      <br>
-      <label for="revenue_unit">Unit (b, m, or t):
-        <input name="revenue_unit" />
-      </label>
-      <br>
-      <label for="revenue_source_page">Source Page:
-        <input name="revenue_source_page" />
-      </label>
-      <br>
-      <h3>Earnings Total</h3>
-      <label for="earnings_metric">Earnings Metric (e.g. net earnings, net income, etc.):
-        <input name="earnings_metric" />
-      </label>
-      <br>
-      <label for="current_total_earnings">Current Data:
-        <input name="current_total_earnings" />
-      </label>
-      <br>
-      <label for="past_total_earnings">Year-Ago Data:
-        <input name="past_total_earnings" />
-      </label>
-      <br>
-      <label for="earnings_currency">Currency (e.g. $, €, etc.):
-        <input name="earnings_currency" />
-      </label>
-      <br>
-      <label for="earnings_unit">Unit (b, m, or t):
-        <input name="earnings_unit" />
-      </label>
-      <br>
-      <label for="earnings_source_page">Source Page:
-        <input name="earnings_source_page" />
-      </label>
-      <br>
+      <section class="metric-totals">
+        <h3>Revenue Total</h3>
+        <label for="revenue_metric">Revenue Metric (e.g. revenue, sales, etc.):
+          <input name="revenue_metric" />
+        </label>
+        <br>
+        <label for="current_total_revenue">Current Data:
+          <input name="current_total_revenue" />
+        </label>
+        <br>
+        <label for="past_total_revenue">Year-Ago Data:
+          <input name="past_total_revenue" />
+        </label>
+        <br>
+        <label for="revenue_currency">Currency (e.g. $, €, etc.):
+          <input name="revenue_currency" />
+        </label>
+        <br>
+        <label for="revenue_unit">Unit (b, m, or t):
+          <input name="revenue_unit" />
+        </label>
+        <br>
+        <label for="revenue_source_page">Source Page:
+          <input name="revenue_source_page" />
+        </label>
+        <br>
+        <h3>Earnings Total</h3>
+        <label for="earnings_metric">Earnings Metric (e.g. net earnings, net income, etc.):
+          <input name="earnings_metric" />
+        </label>
+        <br>
+        <label for="current_total_earnings">Current Data:
+          <input name="current_total_earnings" />
+        </label>
+        <br>
+        <label for="past_total_earnings">Year-Ago Data:
+          <input name="past_total_earnings" />
+        </label>
+        <br>
+        <label for="earnings_currency">Currency (e.g. $, €, etc.):
+          <input name="earnings_currency" />
+        </label>
+        <br>
+        <label for="earnings_unit">Unit (b, m, or t):
+          <input name="earnings_unit" />
+        </label>
+        <br>
+        <label for="earnings_source_page">Source Page:
+          <input name="earnings_source_page" />
+        </label>
+        <br>
+      </section>
 
       <% session[:segments].times do |segment_number| %>
       <% segment_number += 1 %>
-        <label for="segment_<%= segment_number %>_name"><h3>Revenue Metric for Segment <%= segment_number %>:
-          <input name="segment_<%= segment_number %>_name"></h3>
-        </label>
-        <label for="revenue_metric_<%= segment_number %>">Revenue Metric (e.g. revenue, sales, etc.):
-          <input name="revenue_metric_<%= segment_number %>" />
-        </label>
-        <br>
-        <label for="current_total_revenue_<%= segment_number %>">Current Data:
-          <input name="current_total_revenue_<%= segment_number %>" />
-        </label>
-        <br>
-        <label for="past_total_revenue_<%= segment_number %>">Year-Ago Data:
-          <input name="past_total_revenue_<%= segment_number %>" />
-        </label>
-        <br>
-        <label for="revenue_currency_<%= segment_number %>">Currency (e.g. $, €, etc.):
-          <input name="revenue_currency_<%= segment_number %>" />
-        </label>
-        <br>
-        <label for="revenue_unit_<%= segment_number %>">Unit (b, m, or t):
-          <input name="revenue_unit_<%= segment_number %>" />
-        </label>
-        <br>
-        <label for="revenue_source_page_<%= segment_number %>">Source Page:
-          <input name="revenue_source_page_<%= segment_number %>" />
-        </label>
-        <br>
+        <section class="segment-revenue">
+          <label for="segment_<%= segment_number %>_name"><h3>Revenue Metric for Segment <%= segment_number %>:
+            <input name="segment_<%= segment_number %>_name"></h3>
+          </label>
+          <label for="revenue_metric_<%= segment_number %>">Revenue Metric (e.g. revenue, sales, etc.):
+            <input name="revenue_metric_<%= segment_number %>" />
+          </label>
+          <br>
+          <label for="current_total_revenue_<%= segment_number %>">Current Data:
+            <input name="current_total_revenue_<%= segment_number %>" />
+          </label>
+          <br>
+          <label for="past_total_revenue_<%= segment_number %>">Year-Ago Data:
+            <input name="past_total_revenue_<%= segment_number %>" />
+          </label>
+          <br>
+          <label for="revenue_currency_<%= segment_number %>">Currency (e.g. $, €, etc.):
+            <input name="revenue_currency_<%= segment_number %>" />
+          </label>
+          <br>
+          <label for="revenue_unit_<%= segment_number %>">Unit (b, m, or t):
+            <input name="revenue_unit_<%= segment_number %>" />
+          </label>
+          <br>
+          <label for="revenue_source_page_<%= segment_number %>">Source Page:
+            <input name="revenue_source_page_<%= segment_number %>" />
+          </label>
+          <br>
+        </section>
+
         <% if session[:earnings_info] == 'y' %>
-          <h3>Earnings Metric for Segment <%= segment_number %></h3>
-          <label for="earnings_metric_<%= segment_number %>">Earnings Metric (e.g. net earnings, net income, etc.):
-            <input name="earnings_metric_<%= segment_number %>" />
-          </label>
-          <br>
-          <label for="current_total_earnings_<%= segment_number %>">Current Data:
-            <input name="current_total_earnings_<%= segment_number %>" />
-          </label>
-          <br>
-          <label for="past_total_earnings_<%= segment_number %>">Year-Ago Data:
-            <input name="past_total_earnings_<%= segment_number %>" />
-          </label>
-          <br>
-          <label for="earnings_currency_<%= segment_number %>">Currency (e.g. $, €, etc.):
-            <input name="earnings_currency_<%= segment_number %>" />
-          </label>
-          <br>
-          <label for="earnings_unit_<%= segment_number %>">Unit (b, m, or t):
-            <input name="earnings_unit_<%= segment_number %>" />
-          </label>
-          <br>
-          <label for="earnings_source_page_<%= segment_number %>">Source Page:
-            <input name="earnings_source_page_<%= segment_number %>" />
-          </label>
+          <section class="segment-earnings">
+            <h3>Earnings Metric for Segment <%= segment_number %></h3>
+            <label for="earnings_metric_<%= segment_number %>">Earnings Metric (e.g. net earnings, net income, etc.):
+              <input name="earnings_metric_<%= segment_number %>" />
+            </label>
+            <br>
+            <label for="current_total_earnings_<%= segment_number %>">Current Data:
+              <input name="current_total_earnings_<%= segment_number %>" />
+            </label>
+            <br>
+            <label for="past_total_earnings_<%= segment_number %>">Year-Ago Data:
+              <input name="past_total_earnings_<%= segment_number %>" />
+            </label>
+            <br>
+            <label for="earnings_currency_<%= segment_number %>">Currency (e.g. $, €, etc.):
+              <input name="earnings_currency_<%= segment_number %>" />
+            </label>
+            <br>
+            <label for="earnings_unit_<%= segment_number %>">Unit (b, m, or t):
+              <input name="earnings_unit_<%= segment_number %>" />
+            </label>
+            <br>
+            <label for="earnings_source_page_<%= segment_number %>">Source Page:
+              <input name="earnings_source_page_<%= segment_number %>" />
+            </label>
+          </section>
         <% end %>
       <% end %>
       <br>
