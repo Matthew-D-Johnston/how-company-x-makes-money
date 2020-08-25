@@ -46,7 +46,7 @@ class DatabasePersistence
     sql = <<~SQL
       SELECT fr.company_id, c.name, fd.report_id, fr.period_end_date, fr.source_url,
              fd.source_page, fd.segment, fd.metric, fd.currency, fd.data_current_period,
-             fd.data_year_ago_period, fd.unit
+             fd.data_year_ago_period, fd.unit, fr.special_form_date
         FROM companies AS c
        INNER JOIN financial_report AS fr ON c.id = fr.company_id
        INNER JOIN financial_data AS fd ON fr.id = fd.report_id
@@ -122,14 +122,14 @@ class DatabasePersistence
     query(sql, name, nickname, ticker)
   end
 
-  def add_financial_report(company_id, quarter, year, period_end, source, source_url, segments)
+  def add_financial_report(company_id, quarter, year, period_end, source, source_url, segments, special_form_date)
     sql = <<~SQL
       INSERT INTO financial_report
-        (company_id, quarter, year, period_end_date, source, source_url, number_of_segments)
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
+        (company_id, quarter, year, period_end_date, source, source_url, number_of_segments, special_form_date)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
     SQL
 
-    query(sql, company_id, quarter, year, period_end, source, source_url, segments)
+    query(sql, company_id, quarter, year, period_end, source, source_url, segments, special_form_date)
   end
 
   def add_financial_data(company_id, report_id, source_page, currency, segment, metric, unit, current_data, year_ago_data)
@@ -143,7 +143,7 @@ class DatabasePersistence
   end
 
   def all_company_names_nicknames_and_tickers
-    sql = "SELECT name, nickname, ticker FROM companies"
+    sql = "SELECT name, nickname, ticker FROM companies ORDER BY nickname"
     result = query(sql)
   end
 end

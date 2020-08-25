@@ -174,6 +174,7 @@ COPY public.companies (id, name, nickname, ticker) FROM stdin;
 4	Uber Technologies Inc	Uber	UBER
 5	Nike Inc	Nike	NKE
 6	Netflix Inc	Netflix	NFLX
+7	Spotify Technology SA	Spotify	SPOT
 \.
 
 
@@ -233,6 +234,12 @@ COPY public.financial_data (id, company_id, report_id, source_page, currency, se
 49	6	6	9	$	Europe, Middle East, and Africa (EMEA)	Revenue	t	1892537	1319087
 50	6	6	9	$	Latin America (LATAM)	Revenue	t	785368	677136
 51	6	6	9	$	Asia-Pacific (APAC)	Revenue	t	569140	349494
+52	7	7	1	€	Total	Revenue	m	1889	1667
+53	7	7	1	€	Total	Net income	m	-356	-76
+54	7	7	30	€	Premium Service	Revenue	m	1758	1502
+55	7	7	32	€	Premium Service	Gross profit	m	495	413
+56	7	7	30	€	Ad-Supported Service	Revenue	m	131	165
+57	7	7	32	€	Ad-Supported Service	Gross profit	m	-16	21
 \.
 
 
@@ -245,8 +252,9 @@ COPY public.financial_report (id, company_id, quarter, year, period_end_date, so
 2	2	2	2020	2020-06-28	10-Q	https://investors.lockheedmartin.com/static-files/2fdcca51-9038-4a84-8a59-7d8d4348330c	4	N/A
 3	3	2	2020	2020-06-30	10-Q	http://d18rn0p25nwr6d.cloudfront.net/CIK-0001364742/ac685253-accc-48fb-bacc-4a81d52c6f40.pdf	5	N/A
 4	4	2	2020	2020-06-30	10-Q	https://d18rn0p25nwr6d.cloudfront.net/CIK-0001543151/6be7ca8c-d5b0-44b5-96ea-7322b601fa82.pdf	5	N/A
-5	5	0	2020	2020-05-31	10-K	http://d18rn0p25nwr6d.cloudfront.net/CIK-0000320187/72b61935-3ee0-4f79-a564-0d5134713574.pdf	5	\N
-6	6	2	2020	2020-06-30	10-Q	http://d18rn0p25nwr6d.cloudfront.net/CIK-0001065280/bcff7d52-7a7d-4e0c-8265-4b6860929fb1.pdf	4	\N
+5	5	0	2020	2020-05-31	10-K	http://d18rn0p25nwr6d.cloudfront.net/CIK-0000320187/72b61935-3ee0-4f79-a564-0d5134713574.pdf	5	N/A
+6	6	2	2020	2020-06-30	10-Q	http://d18rn0p25nwr6d.cloudfront.net/CIK-0001065280/bcff7d52-7a7d-4e0c-8265-4b6860929fb1.pdf	4	N/A
+7	7	2	2020	2020-06-30	6-K	http://d18rn0p25nwr6d.cloudfront.net/CIK-0001639920/818bc571-7eb0-4959-bc59-bff08fe6a2a0.pdf	2	July, 2020
 \.
 
 
@@ -254,21 +262,21 @@ COPY public.financial_report (id, company_id, quarter, year, period_end_date, so
 -- Name: companies_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matthewjohnston
 --
 
-SELECT pg_catalog.setval('public.companies_id_seq', 6, true);
+SELECT pg_catalog.setval('public.companies_id_seq', 7, true);
 
 
 --
 -- Name: financial_data_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matthewjohnston
 --
 
-SELECT pg_catalog.setval('public.financial_data_id_seq', 51, true);
+SELECT pg_catalog.setval('public.financial_data_id_seq', 57, true);
 
 
 --
 -- Name: financial_report_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matthewjohnston
 --
 
-SELECT pg_catalog.setval('public.financial_report_id_seq', 6, true);
+SELECT pg_catalog.setval('public.financial_report_id_seq', 7, true);
 
 
 --

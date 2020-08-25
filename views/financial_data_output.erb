@@ -40,15 +40,15 @@
       <% @raw_data.each do |tuple| %>
         <h3><%= tuple["segment"] %> <%= tuple["metric"] %></h3>
         <p>
-          Current Period: <%= round_to_one_decimal(full_number_from_units(tuple["data_current_period"], tuple["unit"]), tuple["currency"]) %>
+          <mark>Current Period: <%= round_to_one_decimal(full_number_from_units(tuple["data_current_period"], tuple["unit"]), tuple["currency"]) %></mark>
           <br>
           Year-Ago Period: <%= round_to_one_decimal(full_number_from_units(tuple["data_year_ago_period"], tuple["unit"]), tuple["currency"]) %>
           <br>
-          YOY Growth Rate: <%= yoy_growth_rate(tuple["data_current_period"], tuple["data_year_ago_period"]) %>
+          <mark>YOY Growth Rate: <%= yoy_growth_rate(tuple["data_current_period"], tuple["data_year_ago_period"]) %></mark>
           <br>
-          Share of Total: <%= segment_share_totals(@segment_breakdown, tuple["segment"], tuple["metric"], tuple["company_id"], tuple["report_id"]) %>
+          <mark>Share of Total: <%= segment_share_totals(@segment_breakdown, tuple["segment"], tuple["metric"], tuple["company_id"], tuple["report_id"]) %></mark>
           <br>
-          Citation: <%= tuple["name"] %>. "<a href="<%= tuple["source_url"] %>"><%= citation_source(session[:retrieve_data_source], session[:retrieve_data_quarter], tuple["period_end_date"])%></a>," page <%= tuple["source_page"] %>. Accessed <%= current_date %>.
+          Citation: <%= tuple["name"] %>. "<a href="<%= tuple["source_url"] %>"><%= citation_source(session[:retrieve_data_source], session[:retrieve_data_quarter], tuple["period_end_date"], tuple["special_form_date"])%></a>," page <%= tuple["source_page"] %>. Accessed <%= current_date %>.
         </p>
       <% end %>
     </section>

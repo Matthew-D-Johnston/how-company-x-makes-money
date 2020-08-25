@@ -127,11 +127,13 @@ helpers do
     "#{month}. #{day}, #{year}"
   end
 
-  def citation_source(source, quarter, period_end)
+  def citation_source(source, quarter, period_end, special_form_date)
     year, month, day = period_end.split('-')
     month = Date::MONTHNAMES[month.to_i]
 
-    if quarter == '0'
+    if source == '6-K'
+      "Form 6-K for the month of #{special_form_date}"
+    elsif quarter == '0'
       "Form #{source} for the fiscal year ended #{month} #{day}, #{year}"
     else
       "Form #{source} for the quarterly period ended #{month} #{day}, #{year}"
@@ -224,12 +226,13 @@ post "/financial_report" do
   source = params[:source]
   source_url = params[:source_url]
   segments = params[:number_of_segments]
+  special_form_date = params[:special_form_date]
 
   session[:company_id] = company_id
   session[:segments] = segments.to_i
   session[:earnings_info] = params[:earnings_info]
 
-  @storage.add_financial_report(company_id, quarter, year, period_end, source, source_url, segments)
+  @storage.add_financial_report(company_id, quarter, year, period_end, source, source_url, segments, special_form_date)
 
   session[:report_id] = @storage.find_current_report_id(company_id, quarter, year, source).to_i
 

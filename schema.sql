@@ -14,6 +14,7 @@ CREATE TABLE financial_report (
   source text NOT NULL,
   source_url text NOT NULL,
   number_of_segments integer NOT NULL,
+  special_form_date text NOT NULL,
   UNIQUE(company_id, quarter, period_end_date, source)
 );
 
