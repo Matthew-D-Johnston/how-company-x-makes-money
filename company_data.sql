@@ -113,6 +113,7 @@ CREATE TABLE public.financial_report (
     source text NOT NULL,
     source_url text NOT NULL,
     number_of_segments integer NOT NULL,
+    special_form_date text,
     CONSTRAINT financial_report_quarter_check CHECK (((quarter >= 0) AND (quarter <= 4)))
 );
 
@@ -171,6 +172,8 @@ COPY public.companies (id, name, nickname, ticker) FROM stdin;
 2	Lockheed Martin Corp	Lockheed Martin	LMT
 3	BlackRock Inc	BlackRock	BLK
 4	Uber Technologies Inc	Uber	UBER
+5	Nike Inc	Nike	NKE
+6	Netflix Inc	Netflix	NFLX
 \.
 
 
@@ -212,6 +215,24 @@ COPY public.financial_data (id, company_id, report_id, source_page, currency, se
 31	4	4	35	$	ATG and Other Technology Programs	Adjusted EBITDA	m	-91	-132
 32	4	4	14	$	Other Bets	Revenue	m	4	28
 33	4	4	35	$	Other Bets	Adjusted EBITDA	m	-23	-70
+34	5	5	25	$	Total	Revenue	m	37403	39117
+35	5	5	25	$	Total	Net income	m	2539	4029
+36	5	5	35	$	North America	Revenue	m	14484	15902
+37	5	5	35	$	North America	EBIT	m	2899	3925
+38	5	5	35	$	Europe, Middle East & Africa	Revenue	m	9347	9812
+39	5	5	35	$	Europe, Middle East & Africa	EBIT	m	1541	1995
+40	5	5	35	$	Greater China	Revenue	m	6679	6208
+41	5	5	35	$	Greater China	EBIT	m	2490	2376
+42	5	5	35	$	Asia Pacific & Latin America	Revenue	m	5028	5254
+43	5	5	35	$	Asia Pacific & Latin America	EBIT	m	1184	1323
+44	5	5	35	$	Global Brand Divisions	Revenue	m	30	42
+45	5	5	35	$	Global Brand Divisions	EBIT	m	-3468	-3262
+46	6	6	3	$	Total	Revenue	t	6148286	4923116
+47	6	6	3	$	Total	Net income	t	720196	270650
+48	6	6	8	$	United States and Canada (UCAN)	Revenue	t	2839670	2501199
+49	6	6	9	$	Europe, Middle East, and Africa (EMEA)	Revenue	t	1892537	1319087
+50	6	6	9	$	Latin America (LATAM)	Revenue	t	785368	677136
+51	6	6	9	$	Asia-Pacific (APAC)	Revenue	t	569140	349494
 \.
 
 
@@ -219,11 +240,13 @@ COPY public.financial_data (id, company_id, report_id, source_page, currency, se
 -- Data for Name: financial_report; Type: TABLE DATA; Schema: public; Owner: matthewjohnston
 --
 
-COPY public.financial_report (id, company_id, quarter, year, period_end_date, source, source_url, number_of_segments) FROM stdin;
-1	1	2	2020	2020-06-30	10-Q	https://d18rn0p25nwr6d.cloudfront.net/CIK-0001418091/51caa042-6314-4604-92ee-98dfb080ac5b.pdf	2
-2	2	2	2020	2020-06-28	10-Q	https://investors.lockheedmartin.com/static-files/2fdcca51-9038-4a84-8a59-7d8d4348330c	4
-3	3	2	2020	2020-06-30	10-Q	http://d18rn0p25nwr6d.cloudfront.net/CIK-0001364742/ac685253-accc-48fb-bacc-4a81d52c6f40.pdf	5
-4	4	2	2020	2020-06-30	10-Q	https://d18rn0p25nwr6d.cloudfront.net/CIK-0001543151/6be7ca8c-d5b0-44b5-96ea-7322b601fa82.pdf	5
+COPY public.financial_report (id, company_id, quarter, year, period_end_date, source, source_url, number_of_segments, special_form_date) FROM stdin;
+1	1	2	2020	2020-06-30	10-Q	https://d18rn0p25nwr6d.cloudfront.net/CIK-0001418091/51caa042-6314-4604-92ee-98dfb080ac5b.pdf	2	N/A
+2	2	2	2020	2020-06-28	10-Q	https://investors.lockheedmartin.com/static-files/2fdcca51-9038-4a84-8a59-7d8d4348330c	4	N/A
+3	3	2	2020	2020-06-30	10-Q	http://d18rn0p25nwr6d.cloudfront.net/CIK-0001364742/ac685253-accc-48fb-bacc-4a81d52c6f40.pdf	5	N/A
+4	4	2	2020	2020-06-30	10-Q	https://d18rn0p25nwr6d.cloudfront.net/CIK-0001543151/6be7ca8c-d5b0-44b5-96ea-7322b601fa82.pdf	5	N/A
+5	5	0	2020	2020-05-31	10-K	http://d18rn0p25nwr6d.cloudfront.net/CIK-0000320187/72b61935-3ee0-4f79-a564-0d5134713574.pdf	5	\N
+6	6	2	2020	2020-06-30	10-Q	http://d18rn0p25nwr6d.cloudfront.net/CIK-0001065280/bcff7d52-7a7d-4e0c-8265-4b6860929fb1.pdf	4	\N
 \.
 
 
@@ -231,21 +254,21 @@ COPY public.financial_report (id, company_id, quarter, year, period_end_date, so
 -- Name: companies_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matthewjohnston
 --
 
-SELECT pg_catalog.setval('public.companies_id_seq', 4, true);
+SELECT pg_catalog.setval('public.companies_id_seq', 6, true);
 
 
 --
 -- Name: financial_data_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matthewjohnston
 --
 
-SELECT pg_catalog.setval('public.financial_data_id_seq', 33, true);
+SELECT pg_catalog.setval('public.financial_data_id_seq', 51, true);
 
 
 --
 -- Name: financial_report_id_seq; Type: SEQUENCE SET; Schema: public; Owner: matthewjohnston
 --
 
-SELECT pg_catalog.setval('public.financial_report_id_seq', 4, true);
+SELECT pg_catalog.setval('public.financial_report_id_seq', 6, true);
 
 
 --

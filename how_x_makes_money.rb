@@ -131,8 +131,8 @@ helpers do
     year, month, day = period_end.split('-')
     month = Date::MONTHNAMES[month.to_i]
 
-    if quarter == 0
-      "Form #{source} for the fiscal year ended #{month} #{day}, #{year},"
+    if quarter == '0'
+      "Form #{source} for the fiscal year ended #{month} #{day}, #{year}"
     else
       "Form #{source} for the quarterly period ended #{month} #{day}, #{year}"
     end
